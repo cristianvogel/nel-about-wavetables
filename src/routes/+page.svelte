@@ -277,12 +277,9 @@
 	<!-- Header -->
 	<header class="mb-12 text-center max-w-4xl mx-auto">
 		<div
-			class="inline-flex items-center justify-center p-3 bg-indigo-600/20 rounded-full mb-4 border border-indigo-500/30"
+			class="inline-flex items-center justify-center p-3 h-10"
 		>
-			{@render icon('FileAudio', 24, 'text-indigo-400 mr-2')}
-			<span class="text-indigo-300 font-medium tracking-wide uppercase text-sm"
-			>NeverEngineLabs</span
-			>
+			<img src="nel_logo_text_nobg.svg" alt="NeverEngineLabs logo"/>
 		</div>
 		<h1
 			class="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent"
