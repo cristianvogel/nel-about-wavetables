@@ -14,7 +14,7 @@
 		Zap: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
 		Cpu: '<rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" x2="9" y1="1" y2="4"/><line x1="15" x2="15" y1="1" y2="4"/><line x1="9" x2="9" y1="20" y2="23"/><line x1="15" x2="15" y1="20" y2="23"/><line x1="20" x2="23" y1="9" y2="9"/><line x1="20" x2="23" y1="14" y2="14"/><line x1="1" x2="4" y1="9" y2="9"/><line x1="1" x2="4" y1="14" y2="14"/>',
 		Layers: '<polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>',
-		Database: '<path d="M20 2H4C2.9 2 2 2.9 2 4V20C2 21.11 2.9 22 4 22H20C21.11 22 22 21.11 22 20V4C22 2.9 21.11 2 20 2M14.74 14H15V20H9V14H9.31C9.86 14 10.3 13.56 10.3 13V4H13.75V13C13.75 13.56 14.19 14 14.74 14M4 4H6.8V13C6.8 13.56 7.24 14 7.79 14H8V20H4V4M20 20H16V14H16.26C16.81 14 17.25 13.56 17.25 13V4H20V20Z" />',
+		Keys: '<path d="M20 2H4C2.9 2 2 2.9 2 4V20C2 21.11 2.9 22 4 22H20C21.11 22 22 21.11 22 20V4C22 2.9 21.11 2 20 2M14.74 14H15V20H9V14H9.31C9.86 14 10.3 13.56 10.3 13V4H13.75V13C13.75 13.56 14.19 14 14.74 14M4 4H6.8V13C6.8 13.56 7.24 14 7.79 14H8V20H4V4M20 20H16V14H16.26C16.81 14 17.25 13.56 17.25 13V4H20V20Z" />',
 		FileAudio: '<path d="M17.5 22h.5c.5 0 1-.2 1.4-.6.4-.4.6-.9.6-1.4V7.5L14.5 2H6c-.5 0-1 .2-1.4.6C4.2 3 4 3.5 4 4v3"/><polyline points="14 2 14 8 20 8"/><path d="M10 20v-6"/><path d="M6 20v-4"/><path d="M14 20v-4"/>',
 		Music: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
 		ArrowRight: '<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>',
@@ -24,7 +24,25 @@
 	};
 
 	const formats = {
-
+		waldorf: {
+			id: 'waldorf',
+			title: 'Legacy Waldorf / PPG',
+			subtitle: 'The 80s Wavetable Synth',
+			iconName: 'Keys',
+			color: 'text-red-400',
+			bg: 'bg-red-900/20',
+			border: 'border-red-500/50',
+			image: 'ppg.png',
+			specs: {
+				frameSize: '128 Samples (PPG)',
+				maxFrames: '64 Waves',
+				bitDepth: '8-bit / 12-bit',
+				fileType: '.SYX / EPROM Data'
+			},
+			description:
+				'The grandfather of wavetable synthesisers. The original PPG Wave stored 64 waves per table, each only 128 samples per cycle. It was very expensive at the time, competing with the Fairlight system in top studios. Its low resolution (8/12-bit) was fresh in 80s synth pop. Notable users Thomas Dolby, Trevor Horn, Depeche Mode, Tangerine Dream.',
+			compatible: ['PPG Wave 2.2/2.3', 'Waldorf Microwave 1', 'Waldorf Blofeld']
+		},
 
 		gendyn: {
 			id: 'gendyn',
@@ -42,7 +60,7 @@
 			},
 			image: 'Xenakis-in-front-of-the-upic-board.jpg',
 			description:
-				'Un-repeatable cycles. Created by Iannis Xenakis. Instead of reading a stored table, the waveform is generated live via a "random walk" algorithm. The sample points in the waveform move stochastically, creating constantly evolving, unstable timbres. He favoured non-interpolation which made for noisy, aggresive, aliasing waves.',
+				'Un-repeatable anti-pop. Iannis Xenakis used the medium of digital audio in a radical way, to produce a music without cycles. Instead of reading a stored table, the waveform is generated live via a "random walk" algorithm. The sample points in the waveform move stochastically, creating constantly evolving, unstable timbres. He favoured non-interpolation which made for noisy, aggresive, aliasing waves.',
 			compatible: ['GENDYN (Original)', 'iatro (Max/MSP)', 'Kyma', 'CDP']
 		},
 
@@ -67,25 +85,7 @@
 			compatible: ['The music of Cristián Vogel', 'Carla Scaletti (co-founder of Symbolic Sound)', 'any PCM based format']
 		},
 
-		waldorf: {
-			id: 'waldorf',
-			title: 'Legacy Waldorf / PPG',
-			subtitle: 'The 80s Origin',
-			iconName: 'Database',
-			color: 'text-red-400',
-			bg: 'bg-red-900/20',
-			border: 'border-red-500/50',
-			image: 'ppg.png',
-			specs: {
-				frameSize: '128 Samples (PPG)',
-				maxFrames: '64 Waves',
-				bitDepth: '8-bit / 12-bit',
-				fileType: '.SYX / EPROM Data'
-			},
-			description:
-				'The grandfather of wavetable synthesisers. The original PPG Wave stored 64 waves per table, each only 128 samples long. It was very expensive. Its low resolution (8/12-bit) was fresh in 80s synth pop. Notable users Thomas Dolby, Trevor Horn, Depeche Mode, Tangerine Dream.',
-			compatible: ['PPG Wave 2.2/2.3', 'Waldorf Microwave 1', 'Waldorf Blofeld']
-		},
+
 
 		serum: {
 			id: 'serum',
@@ -119,13 +119,14 @@
 				bitDepth: '16-bit PCM',
 				fileType: '.WAV (Standard)'
 			},
+			image: 'wave-edit.jpg',
 			description:
 				'Optimized for hardware with limited memory. Commonly used in Eurorack modules (Synthesis Technology E352/E370) and boutique digital synths.',
 			compatible: ['WaveEdit App', 'SynthTech E352/E370', 'Korg modwave (Import)', 'Piston Honda Mk3']
 		},
 		bitwig: {
 			id: 'bitwig',
-			title: 'Bitwig / Dune .WT',
+			title: 'Bitwig .WT',
 			subtitle: 'The Explicit Container',
 			iconName: 'FileCode',
 			color: 'text-amber-400',
@@ -137,8 +138,9 @@
 				bitDepth: '32-bit Float / 16-bit',
 				fileType: '.WT (WAV + Metadata)'
 			},
+			image: 'bw-wt-browser.jpg',
 			description:
-				'A specialized format (originally from Dune) that explicitly declares frame size. Crucial for Bitwig, which defaults raw .WAV files to 256 samples/frame. Using .WT prevents Serum tables from sounding "broken" or pitched down.',
+				'A specialized format (adapted from Dune soft synth) that explicitly declares frame size in powers of two and other strict metadata. Used in the Bitwig Studio IDE and the open source Surge Synth XT. Bitwig users apply these WT tables to Oscillators, LFOs and even Waveshaping. The WT and WT Curves formats are use in the fantastic 3D morphing native synth instruments, the Polymer, the Wavetable LFO modulator and the Grid.',
 			compatible: ['Bitwig Studio (Polymer/Grid)', 'Synapse Dune 2/3', 'Surge XT']
 		},
 		ableton: {
@@ -285,10 +287,10 @@
 		<h1
 			class="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent"
 		>
-			Wavetable Format Guide
+			Digital Wavetable Synthesis
 		</h1>
 		<p class="text-lg text-slate-400 max-w-2xl mx-auto">
-			A brief history and data guide for digital sound designers.
+			A Partial history and data guide for digital sound designers.
 		</p>
 	</header>
 
@@ -414,6 +416,8 @@
 						<iframe style="border: 0; width: 100%; height: 42px;" src="https://bandcamp.com/EmbeddedPlayer/album=1980001639/size=small/bgcol=111/linkcol=0687f5/track=2460169885/transparent=true/" seamless><a href="https://cristianvogel.bandcamp.com/album/the-assistenz-2016">The Assistenz (2016) by Cristian Vogel</a></iframe>
 						{:else if selectedFormat === 'gendyn'}
 						<iframe style="border: 0; width: 100%; height: 42px;" src="https://bandcamp.com/EmbeddedPlayer/album=1916547661/size=small/bgcol=333333/linkcol=0f91ff/track=3528246608/transparent=true/" seamless><a href="https://neumarecords.bandcamp.com/album/iannis-xenakis-a-s-gendy3-taurhiphanie-thalle-n">Iannis Xenakis: Aïs - Gendy3 - Taurhiphanie - Thalleïn by Iannis Xenakis</a></iframe>
+						{:else if selectedFormat === 'bitwig'}
+						<iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/soundcloud%253Aplaylists%253A2020208517&color=%233d455c&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe><div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;"><a href="https://soundcloud.com/bitwig" title="Bitwig" target="_blank" style="color: #cccccc; text-decoration: none;">Bitwig</a> · <a href="https://soundcloud.com/bitwig/sets/the-art-of-wavetables-demos" title="The Art of Wavetables by Cristian Vogel Demos" target="_blank" style="color: #cccccc; text-decoration: none;">The Art of Wavetables by Cristian Vogel Demos</a></div>
 						{:else}
 						<p class="text-gray-600 text-sm">Coming soon.</p>
 					{/if}
