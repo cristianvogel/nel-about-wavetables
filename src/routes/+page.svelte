@@ -1,5 +1,11 @@
 <script>
+	import { onMount } from 'svelte';
+
 	let selectedFormat = $state('bitwig');
+	let serumCanvas = $state();
+	let waveEditCanvas = $state();
+	let chart1;
+	let chart2;
 
 	// Icon data for self-contained rendering
 	const iconPaths = {
@@ -90,23 +96,99 @@
 		},
 		waldorf: {
 			id: 'waldorf',
-			title: 'Legacy Waldorf',
-			subtitle: 'The Classic Standard',
+			title: 'Legacy Waldorf / PPG',
+			subtitle: 'The 80s Origin',
 			iconName: 'Database',
 			color: 'text-red-400',
 			bg: 'bg-red-900/20',
 			border: 'border-red-500/50',
 			specs: {
-				frameSize: '128 Samples (Legacy)',
+				frameSize: '128 Samples (PPG)',
 				maxFrames: '64 Waves',
-				bitDepth: '8-bit / 16-bit',
-				fileType: '.SYX / Proprietary'
+				bitDepth: '8-bit / 12-bit',
+				fileType: '.SYX / EPROM Data'
 			},
 			description:
-				'The grandfather of wavetable. Older Blofeld/Microwave units used very small tables. Modern Waldorf synths (Quantum/Iridium) are much more flexible.',
-			compatible: ['Waldorf Blofeld', 'Waldorf Microwave', 'PPG Wave']
+				'The grandfather of wavetable. The original PPG Wave stored 64 waves per table, each only 128 samples long. This low resolution (8/12-bit) created the grit famous in 80s synth pop (Depeche Mode, Tangerine Dream).',
+			compatible: ['PPG Wave 2.2/2.3', 'Waldorf Microwave 1', 'Waldorf Blofeld']
 		}
 	};
+
+	onMount(async () => {
+		// Dynamically load Chart.js if not present
+		if (typeof Chart === 'undefined') {
+			const script = document.createElement('script');
+			script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+			document.head.appendChild(script);
+			await new Promise((resolve) => (script.onload = resolve));
+		}
+
+		initCharts();
+	});
+
+	function initCharts() {
+		if (!serumCanvas || !waveEditCanvas) return;
+
+		const commonOptions = {
+			responsive: true,
+			maintainAspectRatio: false,
+			plugins: {
+				legend: { display: false },
+				tooltip: { enabled: false }
+			},
+			scales: {
+				x: { display: false },
+				y: { display: false, min: -1.2, max: 1.2 }
+			},
+			animation: {
+				duration: 2000,
+				easing: 'easeOutQuart'
+			},
+			elements: {
+				point: { radius: 0 }
+			}
+		};
+
+		// Chart 1: Serum (Smooth / High Resolution)
+		// Simulating 2048 samples with a smooth sine wave
+		chart1 = new Chart(serumCanvas, {
+			type: 'line',
+			data: {
+				labels: Array.from({ length: 100 }, (_, i) => i),
+				datasets: [
+					{
+						data: Array.from({ length: 100 }, (_, i) => Math.sin(i * 0.1) + Math.sin(i * 0.3) * 0.5),
+						borderColor: '#4ade80', // green-400
+						borderWidth: 2,
+						backgroundColor: 'rgba(74, 222, 128, 0.1)',
+						fill: true,
+						tension: 0.4 // Smooth spline
+					}
+				]
+			},
+			options: commonOptions
+		});
+
+		// Chart 2: WaveEdit (Stepped / Low Resolution)
+		// Simulating 256 samples with a stepped/quantized look
+		chart2 = new Chart(waveEditCanvas, {
+			type: 'line',
+			data: {
+				labels: Array.from({ length: 40 }, (_, i) => i),
+				datasets: [
+					{
+						data: Array.from({ length: 40 }, (_, i) => Math.sin(i * 0.25) + Math.sin(i * 0.75) * 0.5),
+						borderColor: '#fb923c', // orange-400
+						borderWidth: 2,
+						backgroundColor: 'rgba(251, 146, 60, 0.1)',
+						fill: true,
+						stepped: true // The visual "digital" step effect
+					}
+				]
+			},
+			options: commonOptions
+		});
+	}
 </script>
 
 <!-- Reusable Snippets -->
@@ -140,15 +222,18 @@
 {/snippet}
 
 <!-- Main Layout -->
-<div class="min-h-screen bg-slate-950 text-slate-100 p-4 md:p-8 font-sans selection:bg-indigo-500 selection:text-white">
-
+<div
+	class="min-h-screen bg-slate-950 text-slate-100 p-4 md:p-8 font-sans selection:bg-indigo-500 selection:text-white"
+>
 	<!-- Header -->
 	<header class="mb-12 text-center max-w-4xl mx-auto">
 		<div
 			class="inline-flex items-center justify-center p-3 bg-indigo-600/20 rounded-full mb-4 border border-indigo-500/30"
 		>
 			{@render icon('FileAudio', 24, 'text-indigo-400 mr-2')}
-			<span class="text-indigo-300 font-medium tracking-wide uppercase text-sm">Audio Engineering Reference</span>
+			<span class="text-indigo-300 font-medium tracking-wide uppercase text-sm"
+			>Audio Engineering Reference</span
+			>
 		</div>
 		<h1
 			class="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent"
@@ -218,8 +303,9 @@
 				<div class="relative z-10">
 					<div class="flex items-center gap-4 mb-8">
 						<div
-							class="p-4 rounded-2xl bg-slate-950 border border-slate-800 shadow-xl {formats[selectedFormat]
-								.color}"
+							class="p-4 rounded-2xl bg-slate-950 border border-slate-800 shadow-xl {formats[
+								selectedFormat
+							].color}"
 						>
 							{@render icon(formats[selectedFormat].iconName, 32)}
 						</div>
@@ -299,21 +385,14 @@
 			<div class="bg-slate-900 p-6 rounded-xl border border-slate-800">
 				<div class="flex justify-between items-end mb-4">
 					<span class="text-green-400 font-bold">Serum / Modern</span>
-					<span class="text-xs text-slate-500">High Resolution</span>
+					<span class="text-xs text-slate-500">High Resolution (Smooth)</span>
 				</div>
-				<div class="h-24 flex items-end justify-between gap-1">
-					{#each Array(20) as _, i}
-						<div class="w-full bg-green-500/20 rounded-t-sm relative group">
-							<div
-								class="absolute bottom-0 w-full bg-green-500"
-								style="height: {30 + Math.sin(i) * 20 + 40}%"
-							></div>
-						</div>
-					{/each}
+				<div class="h-40 w-full">
+					<canvas bind:this={serumCanvas}></canvas>
 				</div>
 				<p class="mt-4 text-sm text-slate-400">
-					<span class="font-bold text-slate-200">2048 samples</span> per wave allows for extremely smooth sine
-					waves and complex harmonics without aliasing.
+					<span class="font-bold text-slate-200">2048 samples</span> per wave allows for extremely smooth
+					sine waves and complex harmonics without aliasing.
 				</p>
 			</div>
 
@@ -321,22 +400,14 @@
 			<div class="bg-slate-900 p-6 rounded-xl border border-slate-800">
 				<div class="flex justify-between items-end mb-4">
 					<span class="text-orange-400 font-bold">WaveEdit / Hardware</span>
-					<span class="text-xs text-slate-500">Memory Efficient</span>
+					<span class="text-xs text-slate-500">Memory Efficient (Stepped)</span>
 				</div>
-				<div class="h-24 flex items-end justify-between gap-1">
-					{#each Array(20) as _, i}
-						<div class="w-full bg-orange-500/20 rounded-t-sm relative">
-							<!-- Simulating lower resolution/steppier look -->
-							<div
-								class="absolute bottom-0 w-full bg-orange-500"
-								style="height: {Math.round((30 + Math.sin(i) * 20 + 40) / 10) * 10}%"
-							></div>
-						</div>
-					{/each}
+				<div class="h-40 w-full">
+					<canvas bind:this={waveEditCanvas}></canvas>
 				</div>
 				<p class="mt-4 text-sm text-slate-400">
-					<span class="font-bold text-slate-200">256 samples</span> per wave creates a "steppier" digital sound,
-					often desired for "glitch" or "retro" aesthetics in Eurorack.
+					<span class="font-bold text-slate-200">256 samples</span> per wave creates a "steppier" digital
+					sound, often desired for "glitch" or "retro" aesthetics in Eurorack.
 				</p>
 			</div>
 		</div>
