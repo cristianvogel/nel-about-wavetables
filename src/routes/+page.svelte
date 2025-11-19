@@ -1,5 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
+	import VisualComparison from '$lib/VisualComparison.svelte';
 
 	let selectedFormat = $state('bitwig');
 	let serumCanvas = $state();
@@ -13,33 +14,79 @@
 		Zap: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
 		Cpu: '<rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" x2="9" y1="1" y2="4"/><line x1="15" x2="15" y1="1" y2="4"/><line x1="9" x2="9" y1="20" y2="23"/><line x1="15" x2="15" y1="20" y2="23"/><line x1="20" x2="23" y1="9" y2="9"/><line x1="20" x2="23" y1="14" y2="14"/><line x1="1" x2="4" y1="9" y2="9"/><line x1="1" x2="4" y1="14" y2="14"/>',
 		Layers: '<polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>',
-		Database: '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>',
+		Database: '<path d="M20 2H4C2.9 2 2 2.9 2 4V20C2 21.11 2.9 22 4 22H20C21.11 22 22 21.11 22 20V4C22 2.9 21.11 2 20 2M14.74 14H15V20H9V14H9.31C9.86 14 10.3 13.56 10.3 13V4H13.75V13C13.75 13.56 14.19 14 14.74 14M4 4H6.8V13C6.8 13.56 7.24 14 7.79 14H8V20H4V4M20 20H16V14H16.26C16.81 14 17.25 13.56 17.25 13V4H20V20Z" />',
 		FileAudio: '<path d="M17.5 22h.5c.5 0 1-.2 1.4-.6.4-.4.6-.9.6-1.4V7.5L14.5 2H6c-.5 0-1 .2-1.4.6C4.2 3 4 3.5 4 4v3"/><polyline points="14 2 14 8 20 8"/><path d="M10 20v-6"/><path d="M6 20v-4"/><path d="M14 20v-4"/>',
 		Music: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
 		ArrowRight: '<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>',
 		Info: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>',
-		Settings: '<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>'
+		Settings: '<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>',
+		Activity: '<polyline points="2 12 4 17 6 7 8 19 10 5 12 18 14 6 16 16 18 9 20 14 22 12"/>'
 	};
 
 	const formats = {
-		bitwig: {
-			id: 'bitwig',
-			title: 'Bitwig / Dune .WT',
-			subtitle: 'The Explicit Container',
-			iconName: 'FileCode',
-			color: 'text-amber-400',
-			bg: 'bg-amber-900/20',
-			border: 'border-amber-500/50',
+
+
+		gendyn: {
+			id: 'gendyn',
+			title: 'Xenakis GENDYN',
+			subtitle: 'Dynamic Stochastic',
+			iconName: 'Activity',
+			color: 'text-purple-400',
+			bg: 'bg-purple-900/20',
+			border: 'border-purple-500/50',
 			specs: {
-				frameSize: 'Variable (Header Defined)',
+				frameSize: 'None (Calculated)',
+				maxFrames: 'Infinite',
+				bitDepth: 'Floating Point',
+				fileType: 'Executable / Code'
+			},
+			image: 'Xenakis-in-front-of-the-upic-board.jpg',
+			description:
+				'Un-repeatable cycles. Created by Iannis Xenakis. Instead of reading a stored table, the waveform is generated live via a "random walk" algorithm. The sample points in the waveform move stochastically, creating constantly evolving, unstable timbres. He favoured non-interpolation which made for noisy, aggresive, aliasing waves.',
+			compatible: ['GENDYN (Original)', 'iatro (Max/MSP)', 'Kyma', 'CDP']
+		},
+
+
+		kyma: {
+			id: 'kyma',
+			title: 'Symbolic Sound Kyma',
+			subtitle: 'The 90s',
+			iconName: 'Cpu',
+			color: 'text-orange-400',
+			bg: 'bg-orange-900/20',
+			border: 'border-black-500/50',
+			specs: {
+				frameSize: '4096 Samples',
 				maxFrames: 'Variable',
-				bitDepth: '32-bit Float / 16-bit',
-				fileType: '.WT (WAV + Metadata)'
+				bitDepth: '8/16/24-bit Linear PCM',
+				fileType: 'mono AIF/WAV'
 			},
 			description:
-				'A specialized format (originally from Dune) that explicitly declares frame size. Crucial for Bitwig, which defaults raw .WAV files to 256 samples/frame. Using .WT prevents Serum tables from sounding "broken" or pitched down.',
-			compatible: ['Bitwig Studio (Polymer/Grid)', 'Synapse Dune 2/3', 'Surge XT']
+				'Kyma and it\'s hardware was the most powerful realtime sound programming environment in the mid-90s and is still state-of-the-art today. The digital wavetable oscillators and realtime stochastic synthesis has been inspired by Iannis Xenakis pioneering work with stochastic synthesis.',
+			image: 'kyma.jpg',
+			compatible: ['Kyma']
 		},
+
+		waldorf: {
+			id: 'waldorf',
+			title: 'Legacy Waldorf / PPG',
+			subtitle: 'The 80s Origin',
+			iconName: 'Database',
+			color: 'text-red-400',
+			bg: 'bg-red-900/20',
+			border: 'border-red-500/50',
+			image: 'ppg.png',
+			specs: {
+				frameSize: '128 Samples (PPG)',
+				maxFrames: '64 Waves',
+				bitDepth: '8-bit / 12-bit',
+				fileType: '.SYX / EPROM Data'
+			},
+			description:
+				'The grandfather of wavetable synthesisers. The original PPG Wave stored 64 waves per table, each only 128 samples long. It was very expensive. Its low resolution (8/12-bit) was fresh in 80s synth pop. Notable users Thomas Dolby, Trevor Horn, Depeche Mode, Tangerine Dream.',
+			compatible: ['PPG Wave 2.2/2.3', 'Waldorf Microwave 1', 'Waldorf Blofeld']
+		},
+
 		serum: {
 			id: 'serum',
 			title: 'Serum Format',
@@ -76,6 +123,24 @@
 				'Optimized for hardware with limited memory. Commonly used in Eurorack modules (Synthesis Technology E352/E370) and boutique digital synths.',
 			compatible: ['WaveEdit App', 'SynthTech E352/E370', 'Korg modwave (Import)', 'Piston Honda Mk3']
 		},
+		bitwig: {
+			id: 'bitwig',
+			title: 'Bitwig / Dune .WT',
+			subtitle: 'The Explicit Container',
+			iconName: 'FileCode',
+			color: 'text-amber-400',
+			bg: 'bg-amber-900/20',
+			border: 'border-amber-500/50',
+			specs: {
+				frameSize: 'Variable (Header Defined)',
+				maxFrames: 'Variable',
+				bitDepth: '32-bit Float / 16-bit',
+				fileType: '.WT (WAV + Metadata)'
+			},
+			description:
+				'A specialized format (originally from Dune) that explicitly declares frame size. Crucial for Bitwig, which defaults raw .WAV files to 256 samples/frame. Using .WT prevents Serum tables from sounding "broken" or pitched down.',
+			compatible: ['Bitwig Studio (Polymer/Grid)', 'Synapse Dune 2/3', 'Surge XT']
+		},
 		ableton: {
 			id: 'ableton',
 			title: 'Ableton Wavetable',
@@ -93,24 +158,6 @@
 			description:
 				'Ableton\'s Wavetable synth is an "omnivores". It can import Serum files or raw audio, but internally downsamples everything to 1024 samples per frame for processing.',
 			compatible: ['Ableton Live 10/11/12 Suite']
-		},
-		waldorf: {
-			id: 'waldorf',
-			title: 'Legacy Waldorf / PPG',
-			subtitle: 'The 80s Origin',
-			iconName: 'Database',
-			color: 'text-red-400',
-			bg: 'bg-red-900/20',
-			border: 'border-red-500/50',
-			specs: {
-				frameSize: '128 Samples (PPG)',
-				maxFrames: '64 Waves',
-				bitDepth: '8-bit / 12-bit',
-				fileType: '.SYX / EPROM Data'
-			},
-			description:
-				'The grandfather of wavetable. The original PPG Wave stored 64 waves per table, each only 128 samples long. This low resolution (8/12-bit) created the grit famous in 80s synth pop (Depeche Mode, Tangerine Dream).',
-			compatible: ['PPG Wave 2.2/2.3', 'Waldorf Microwave 1', 'Waldorf Blofeld']
 		}
 	};
 
@@ -232,18 +279,16 @@
 		>
 			{@render icon('FileAudio', 24, 'text-indigo-400 mr-2')}
 			<span class="text-indigo-300 font-medium tracking-wide uppercase text-sm"
-			>Audio Engineering Reference</span
+			>NeverEngineLabs</span
 			>
 		</div>
 		<h1
 			class="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent"
 		>
-			Wavetable Formats
+			Wavetable Format Guide
 		</h1>
 		<p class="text-lg text-slate-400 max-w-2xl mx-auto">
-			A compatibility guide for sound designers. Understanding the hidden structures inside your <code
-			class="bg-slate-800 px-2 py-1 rounded text-slate-300">.wav</code
-		> files.
+			A brief history and data guide for digital sound designers.
 		</p>
 	</header>
 
@@ -354,6 +399,11 @@
 						<p class="text-slate-300 leading-relaxed text-lg">
 							{formats[selectedFormat].description}
 						</p>
+						{#if formats[selectedFormat].image}
+							<div class="mt-6">
+								<img src={formats[selectedFormat].image} alt="Format Illustration" class="w-full rounded-xl" />
+							</div>
+							{/if}
 					</div>
 
 					<!-- Compatibility -->
@@ -376,40 +426,7 @@
 			</div>
 		</div>
 	</div>
-
-	<!-- Footer / Visual Comparison -->
-	<div class="mt-12 max-w-7xl mx-auto border-t border-slate-800 pt-12">
-		<h3 class="text-2xl font-bold text-slate-200 mb-6 text-center">Visualizing the Difference</h3>
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-			<!-- Serum Visual -->
-			<div class="bg-slate-900 p-6 rounded-xl border border-slate-800">
-				<div class="flex justify-between items-end mb-4">
-					<span class="text-green-400 font-bold">Serum / Modern</span>
-					<span class="text-xs text-slate-500">High Resolution (Smooth)</span>
-				</div>
-				<div class="h-40 w-full">
-					<canvas bind:this={serumCanvas}></canvas>
-				</div>
-				<p class="mt-4 text-sm text-slate-400">
-					<span class="font-bold text-slate-200">2048 samples</span> per wave allows for extremely smooth
-					sine waves and complex harmonics without aliasing.
-				</p>
-			</div>
-
-			<!-- WaveEdit Visual -->
-			<div class="bg-slate-900 p-6 rounded-xl border border-slate-800">
-				<div class="flex justify-between items-end mb-4">
-					<span class="text-orange-400 font-bold">WaveEdit / Hardware</span>
-					<span class="text-xs text-slate-500">Memory Efficient (Stepped)</span>
-				</div>
-				<div class="h-40 w-full">
-					<canvas bind:this={waveEditCanvas}></canvas>
-				</div>
-				<p class="mt-4 text-sm text-slate-400">
-					<span class="font-bold text-slate-200">256 samples</span> per wave creates a "steppier" digital
-					sound, often desired for "glitch" or "retro" aesthetics in Eurorack.
-				</p>
-			</div>
-		</div>
-	</div>
+	{#if selectedFormat === 'serum' || selectedFormat === 'waveedit'}
+		<VisualComparison />
+	{/if}
 </div>

@@ -1,2 +1,10 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
+
+* {
+    pointer-events: auto;
+    user-select: none;
+    scrollbar-width: none;
+    /* Prevent the overscroll bounce/glow effect */
+    overscroll-behavior-y: none;
+}
