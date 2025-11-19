@@ -3,7 +3,7 @@
 
 * {
     pointer-events: auto;
-    user-select: none;
+    user-select: auto;
     scrollbar-width: none;
     /* Prevent the overscroll bounce/glow effect */
     overscroll-behavior-y: none;

@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import VisualComparison from '$lib/VisualComparison.svelte';
 
-	let selectedFormat = $state('bitwig');
+	let selectedFormat = $state('gendyn');
 	let serumCanvas = $state();
 	let waveEditCanvas = $state();
 	let chart1;
@@ -64,7 +64,7 @@
 			description:
 				'Kyma and it\'s hardware was the most powerful realtime sound programming environment in the mid-90s and is still state-of-the-art today. The digital wavetable oscillators and realtime stochastic synthesis has been inspired by Iannis Xenakis pioneering work with stochastic synthesis.',
 			image: 'kyma.jpg',
-			compatible: ['Kyma']
+			compatible: ['The music of Cristián Vogel', 'Carla Scaletti (co-founder of Symbolic Sound)', 'any PCM based format']
 		},
 
 		waldorf: {
@@ -406,8 +406,19 @@
 							{/if}
 					</div>
 
+						<h4 class="text-sm font-semibold text-slate-500 uppercase mb-4 tracking-widest">
+							Audio example
+						</h4>
+					<hr class="my-4 border-slate-700/50"/>
+					{#if selectedFormat === 'kyma'}
+						<iframe style="border: 0; width: 100%; height: 42px;" src="https://bandcamp.com/EmbeddedPlayer/album=1980001639/size=small/bgcol=111/linkcol=0687f5/track=2460169885/transparent=true/" seamless><a href="https://cristianvogel.bandcamp.com/album/the-assistenz-2016">The Assistenz (2016) by Cristian Vogel</a></iframe>
+						{:else if selectedFormat === 'gendyn'}
+						<iframe style="border: 0; width: 100%; height: 42px;" src="https://bandcamp.com/EmbeddedPlayer/album=1916547661/size=small/bgcol=333333/linkcol=0f91ff/track=3528246608/transparent=true/" seamless><a href="https://neumarecords.bandcamp.com/album/iannis-xenakis-a-s-gendy3-taurhiphanie-thalle-n">Iannis Xenakis: Aïs - Gendy3 - Taurhiphanie - Thalleïn by Iannis Xenakis</a></iframe>
+						{:else}
+						<p class="text-gray-600 text-sm">Coming soon.</p>
+					{/if}
 					<!-- Compatibility -->
-					<div>
+					<div class="mt-12">
 						<h4 class="text-sm font-semibold text-slate-500 uppercase mb-4 tracking-widest">
 							Commonly Used In
 						</h4>
@@ -426,6 +437,7 @@
 			</div>
 		</div>
 	</div>
+
 	{#if selectedFormat === 'serum' || selectedFormat === 'waveedit'}
 		<VisualComparison />
 	{/if}
